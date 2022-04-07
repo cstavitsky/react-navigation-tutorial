@@ -13,7 +13,7 @@ import * as Sentry from '@sentry/react-native';
 const routingInstrumentation = new Sentry.ReactNavigationInstrumentation();
 
 Sentry.init({
-    dsn: DSN, 
+    dsn: "put DSN here", 
     sampleRate: 1,
     tracesSampleRate: 1.0,
     enableAutoSessionTracking: true,
@@ -32,29 +32,31 @@ const Stack = createNativeStackNavigator()
 function App() {
   const navigation = React.useRef();
   return (
-    <PaperProvider>
-      <NavigationContainer
-        ref={navigation}
-        onReady={() => {
-            // Register the navigation container instrumentation
-            routingInstrumentation.registerNavigationContainer(
-                navigation
-            );
-        }}
-      >
-        <Stack.Navigator>
-          <Stack.Screen name="Home" component={HomeScreen} options={{
-            headerRight: () => (
-              <IconButton icon="alert-outline" onPress={() => alert('You\'re awesome!')} color={DefaultTheme.colors.notification} />
-            )
-          }} />
-          <Stack.Screen name="Book" component={BookScreen} />
-          <Stack.Screen name="Back" component={BackScreen} />
-          <Stack.Screen name="Name" component={NameScreen} />
-          <Stack.Screen name="Title" component={TitleScreen} options={({route}) => ({title: route.params.title})} />
-        </Stack.Navigator>
-      </NavigationContainer>
-    </PaperProvider>
+    <Sentry.TouchEventBoundary>
+      <PaperProvider>
+        <NavigationContainer
+          ref={navigation}
+          onReady={() => {
+              // Register the navigation container instrumentation
+              routingInstrumentation.registerNavigationContainer(
+                  navigation
+              );
+          }}
+        >
+          <Stack.Navigator>
+            <Stack.Screen name="Home" component={HomeScreen} options={{
+              headerRight: () => (
+                <IconButton icon="alert-outline" onPress={() => alert('You\'re awesome!')} color={DefaultTheme.colors.notification} />
+              )
+            }} />
+            <Stack.Screen name="Book" component={BookScreen} />
+            <Stack.Screen name="Back" component={BackScreen} />
+            <Stack.Screen name="Name" component={NameScreen} />
+            <Stack.Screen name="Title" component={TitleScreen} options={({route}) => ({title: route.params.title})} />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </PaperProvider>
+    </Sentry.TouchEventBoundary>
   );
 }
 
